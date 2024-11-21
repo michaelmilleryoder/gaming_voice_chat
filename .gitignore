@@ -2,3 +2,4 @@ conda_env/
 .ipynb_checkpoints/
 tekko_responses.csv
 irb/
+blur_faces/videos/
