@@ -1,3 +1,5 @@
+**This is a copy of the GitHub repo at https://github.com/asmaamirkhan/BlurryFaces**
+
 # 🕵️‍♀️ Blurry Faces
 A tool to blur faces or other regions in photos and videos 🕵️‍
 
