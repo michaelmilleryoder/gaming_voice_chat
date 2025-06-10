@@ -5,7 +5,7 @@ This is a Python script for processing the **audio of stream videos** located in
 For each file, this file:
 - Diarizes the file using `pyannote.audio`, getting the audio segments of speech
 - Transcribes the diarized file using Whisper, getting a "script" of the speech in the file -- saved to `.txt`
-- Concatenates the speech segments of the audio and applies audio anonymization, de-identifying the speech in the audio -- processed concatenated audio is saved to `.wav` or `.mp4`
+- Applies audio anonymization, de-identifying the speech in the audio -- processed audio is saved to `.wav` or `.mp4`
 
 Any file that causes an error is skipped.
 
