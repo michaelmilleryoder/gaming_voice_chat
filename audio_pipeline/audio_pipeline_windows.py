@@ -128,6 +128,21 @@ def anonymize_wav(wav_in_path, wav_out_path):
     sf.write(wav_out_path, y, fs, "PCM_16")
 
 
+def nonintegrated_diarization_anonymization(
+    wav_in_path, wav_out_path, txt_out_path, pbar
+):
+    """
+    A non-integrated form of the diarization/anonymization where they run
+    sequentially on the entire video, rather than using the speaker segments
+    generated with the diarization.
+    """
+
+    pbar.set_postfix_str("Diarizing and transcribing audio...")
+    diarize(wav_in_path, txt_out_path)
+    pbar.set_postfix_str("Anonymizing audio...")
+    anonymize_wav(wav_in_path, wav_out_path)
+
+
 def integrated_diarization_anonymization(wav_in_path, wav_out_path, txt_out_path, pbar):
     """
     A function that runs both the diarization and anonymization on the same video. The
@@ -215,7 +230,7 @@ def run_pipeline(
         ".wav",
         ".mp4",
     ],
-    diarization_anonymization=integrated_diarization_anonymization,
+    diarization_anonymization=nonintegrated_diarization_anonymization,
 ):
     """
     A function that runs the pipeline through every video within the folder_path.
