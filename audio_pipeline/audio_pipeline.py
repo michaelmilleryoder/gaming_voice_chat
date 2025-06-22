@@ -25,6 +25,7 @@ import shutil
 from tqdm import tqdm
 from transformers import pipeline as hf_pipeline
 import argparse
+import moviepy
 
 ########################################################################################
 ########################################################################################
@@ -43,7 +44,11 @@ pipeline.to(device)
 
 # Additionally loading in this -- not initially in the diarize.py, but
 # is needed.
-pipe = hf_pipeline("automatic-speech-recognition", model="openai/whisper-base")
+pipe = hf_pipeline(
+    "automatic-speech-recognition",
+    model="openai/whisper-base",
+    generate_kwargs={"language": "english"},
+)
 ########################################################################################
 ########################################################################################
 
@@ -253,13 +258,23 @@ def run_pipeline(
 
             pbar.set_description_str(f"Post-processing file: {filename}")
 
+            # If it is mp4, we need to save it as a .WAV
+            if curr_file_ext == ".mp4":
+
+                video_clip = moviepy.VideoFileClip(in_folder_path + filename)
+                video_clip.audio.write_audiofile(
+                    in_folder_path + filename[:-4] + ".wav", codec="pcm_s16le"
+                )
+                video_clip.close()
+
+            filename_no_extension = filename[:-4]
+
             # We get the full path of that file
-            wav_in_path = in_folder_path + filename
+            wav_in_path = in_folder_path + filename_no_extension + ".wav"
 
             # And with that, we can get the output names for our anonimized
             # audio and text diarization.
-            wav_out_path = out_folder_path + f"anonymized_{filename}"
-            filename_no_extension = filename[:-4]
+            wav_out_path = out_folder_path + f"anonymized_{filename_no_extension}.wav"
             txt_out_path = (
                 out_folder_path + f"diarized_transcript_{filename_no_extension}.txt"
             )
