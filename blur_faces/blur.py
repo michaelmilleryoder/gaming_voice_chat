@@ -1,9 +1,13 @@
 import os
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"  # 0 = all, 1 = INFO off, 2 = INFO+WARN off, 3 = only ERRORs
 import argparse
 import cv2
 from BlurryFaces.DetectorAPI import Detector
 from multiprocessing.dummy import Pool as ThreadPool
+from tqdm import tqdm
 
+import shutup
+shutup.please()  # Suppress warnings from the BlurryFaces library
 
 
 def blurBoxes(image, boxes):
@@ -79,19 +83,30 @@ def blur(input_file_path, output_file_path=None):
         # cv2.imshow('blurred', frame)
     # if image will be saved then save it 
     output.write(frame)
-    print('Blurred video has been saved successfully at',
-            output_file_path, 'path')
+    # print('Blurred video has been saved successfully at',
+    #         output_file_path, 'path')
 
     # when any key has been pressed then close window and stop the program
 
     cv2.destroyAllWindows()
 
 def blur_directory(directory, num_threads=4):
-    files = os.listdir(directory)
-    for file in files:
-        if file.endswith('.mp4'):
-            pool = ThreadPool(num_threads)
-            pool.map(blur, [os.path.join(directory, file)])
+    files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith('.mp4')]
+    # pool = ThreadPool(num_threads)
+    # pool.map(blur, files)
+
+    # pool.close()
+    # pool.join()
+
+
+    # Above but using tqdm for progress bar
+    with ThreadPool(num_threads) as pool:
+        for _ in tqdm(pool.imap(blur, files), total=len(files), desc='Processing videos'):
+            pass
+    
+    print(f'All videos in {directory} have been processed.')
+
+
             
     
 

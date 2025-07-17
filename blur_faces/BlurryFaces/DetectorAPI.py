@@ -14,7 +14,7 @@ class Detector:
             with tf.io.gfile.GFile(model_path, 'rb') as f:
                 self.graph_def.ParseFromString(f.read())
                 tf.import_graph_def(self.graph_def, name='')
-        print(f"{self.model_name} model is created..")
+        # print(f"{self.model_name} model is created..")
 
     def detect_objects(self, img, threshold=0.3):
         """Runs the model and returns the object inside it
@@ -27,8 +27,8 @@ class Detector:
         Ex: {'id': 16, 'score': 0.11703299731016159, 'x1': 42, 'y1': 6, 'x2': 55, 'y2': 27}
         """
 
-        print(
-            "{} : Object detection has started..".format(self.model_name))
+        # print(
+            # "{} : Object detection has started..".format(self.model_name))
 
         start_time = time.time()
         objects = []
@@ -64,9 +64,9 @@ class Detector:
                     obj["y2"] = int(bbox[2] * rows)
                     objects.append(obj)
 
-            print(f"{self.model_name} : {len(objects)} objects have been found ")
+            # print(f"{self.model_name} : {len(objects)} objects have been found ")
         end_time = time.time()
-        print("{} : Elapsed time: {}".format(
-            self.model_name, str(end_time - start_time)))
+        # print("{} : Elapsed time: {}".format(
+        #     self.model_name, str(end_time - start_time)))
 
         return objects
