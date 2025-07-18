@@ -126,7 +126,16 @@ if __name__ == "__main__":
         # Create a text file to track processed videos
         with open(os.path.join(args.output, 'processed_videos.txt'), 'w') as f:
             f.write("Processed videos:\n")
-    video_files = [f for f in os.listdir(args.directory) if f.endswith('.mp4')]
+    elif not os.path.exists(os.path.join(args.output, 'processed_videos.txt')):
+        with open(os.path.join(args.output, 'processed_videos.txt'), 'w') as f:
+            f.write("Processed videos:\n")
+    else:
+        already_processed = os.listdir(args.output)
+        already_processed = [f for f in already_processed if f.endswith('.mp4')]
+
+
+
+    video_files = [f for f in os.listdir(args.directory) if f.endswith('.mp4') and f not in already_processed]
     if len(video_files) == 0:
         raise FileNotFoundError(f"No video files found in {args.directory}.")
     video_files = [os.path.join(args.directory, f) for f in video_files]
